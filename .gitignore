@@ -1,3 +1,4 @@
 secret.env
 vendor
 .idea
+config.env
