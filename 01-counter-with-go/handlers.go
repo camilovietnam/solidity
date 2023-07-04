@@ -33,21 +33,21 @@ func (h *CounterHandler) Get(c echo.Context) error {
 }
 
 func (h *CounterHandler) Increase(c echo.Context) error {
-	_, err := h.api.Increase(h.signer)
+	tx, err := h.api.Increase(h.signer)
 	if err != nil {
 		log.Printf("Increase: %s", err)
 		return HTTPInternal
 	}
 
-	return c.JSON(http.StatusOK, HTTPResponse{Message: "Increase request was"})
+	return c.JSON(http.StatusOK, HTTPResponse{Message: fmt.Sprintf("Transaction: https://sepolia.etherscan.io/tx/%s", tx.Hash().Hex())})
 }
 
 func (h *CounterHandler) Reset(c echo.Context) error {
-	_, err := h.api.Reset(&bind.TransactOpts{})
+	tx, err := h.api.Reset(h.signer)
 	if err != nil {
 		log.Printf("Reset: %s\n", err)
 		return HTTPInternal
 	}
 
-	return c.JSON(http.StatusOK, HTTPResponse{Message: "Counter was reset"})
+	return c.JSON(http.StatusOK, HTTPResponse{Message: fmt.Sprintf("Transaction: https://sepolia.etherscan.io/tx/%s", tx.Hash().Hex())})
 }
